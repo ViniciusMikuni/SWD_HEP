@@ -38,8 +38,7 @@ os.environ['CUDA_VISIBLE_DEVICES']="3"
 #os.environ['CUDA_DEVICE_ORDER']="PCI_BUS_ID"
 #tf.compat.v1.disable_eager_execution()
 parser = OptionParser(usage="%prog [opt]  inputFiles")
-parser.add_option("--folder", type="string", default="/clusterfs/ml4hep/vmikuni/SWDAN/parsed", help="Folder containing input files")
-parser.add_option("--file", type="string", default="PYTHIA", help="Name of input file")
+parser.add_option("--folder", type="string", default="/clusterfs/ml4hep/vmikuni/SWDAN/BSR", help="Folder containing input files")
 (flags, args) = parser.parse_args()
 
 
@@ -53,18 +52,9 @@ mnist_test = (x_test > 0).reshape(10000, 28, 28, 1).astype(np.uint8) * 255
 mnist_test = np.concatenate([mnist_test, mnist_test, mnist_test], 3)
 
 # Load MNIST-M
-mnistm = pkl.load(open('../BSR/mnistm_data.pkl', 'rb'))
+mnistm = pkl.load(open(os.path.join(flags.folder,'mnistm_data.pkl'), 'rb'))
 mnistm_train = mnistm['train']
 mnistm_test = mnistm['test']
-
-# mnistm_train = mnistm_train[y_mnist_train<2] #Make it binary for the moment
-# mnistm_test = mnistm_test[y_mnist_test<2] #Make it binary for the moment
-
-# mnist_train = mnist_train[y_mnist_train<2] #Make it binary for the moment
-# mnist_test = mnist_test[y_mnist_test<2] #Make it binary for the moment
-
-# y_mnist_train = y_mnist_train[y_mnist_train<2]
-# y_mnist_test = y_mnist_test[y_mnist_test<2]
 
 pixel_mean = np.vstack([mnist_train, mnistm_train]).mean((0, 1, 2))
 
